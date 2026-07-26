@@ -161,6 +161,26 @@ def rename_student(
     return True
 
 # =========================================================
+# Replace Student Face Data
+# =========================================================
+
+def replace_student_embeddings(
+    student_name,
+    embeddings
+):
+
+    database = load_database()
+
+    if student_name not in database:
+        return False
+
+    database[student_name] = embeddings
+
+    save_database(database)
+
+    return True
+
+# =========================================================
 # Delete Student
 # =========================================================
 
@@ -294,3 +314,16 @@ if __name__ == "__main__":
             print("-" * 60)
 
     print("Database Loaded Successfully.")
+
+def delete_student(student_name):
+
+    database = load_database()
+
+    if student_name not in database:
+        return False
+
+    del database[student_name]
+
+    save_database(database)
+
+    return True
