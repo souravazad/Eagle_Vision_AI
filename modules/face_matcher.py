@@ -54,6 +54,10 @@ def cosine_similarity(embedding1, embedding2):
     norm1 = np.linalg.norm(embedding1)
     norm2 = np.linalg.norm(embedding2)
 
+    # Prevent division by zero
+    if norm1 == 0 or norm2 == 0:
+        return 0.0
+
     similarity = dot_product / (norm1 * norm2)
 
     return float(similarity)
@@ -66,9 +70,12 @@ def find_best_match(live_embedding):
 
     database = get_all_students()
 
-    best_name = "Unknown"
+    # No registered students
+    if len(database) == 0:
+        return "Unknown", 0.0
 
-    best_similarity = -1.0
+    best_name = "Unknown"
+    best_similarity = 0.0
 
     for student_name, embeddings in database.items():
 
@@ -82,7 +89,6 @@ def find_best_match(live_embedding):
             if similarity > best_similarity:
 
                 best_similarity = similarity
-
                 best_name = student_name
 
     return best_name, best_similarity
@@ -97,7 +103,11 @@ def recognize_embedding(live_embedding):
         live_embedding
     )
 
-    if similarity >= MATCH_THRESHOLD:
+    if (
+        name != "Unknown"
+        and
+        similarity >= MATCH_THRESHOLD
+    ):
 
         return {
 

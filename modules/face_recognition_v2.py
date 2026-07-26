@@ -53,8 +53,12 @@ def recognize_faces(frame):
 
         similarity = recognition["similarity"]
 
-        confidence = int(
-            similarity * 100
+        confidence = max(
+            0,
+            min(
+                100,
+                int(similarity * 100)
+            )
         )
 
         attendance_status = ""
