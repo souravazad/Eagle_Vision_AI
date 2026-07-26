@@ -8,8 +8,10 @@ Version : 1.0
 ====================================================
 """
 
+
 import os
 from modules.register_student import register_student
+from modules.update_student import update_student
 
 from modules.face_database import (
     get_all_students,
@@ -186,8 +188,7 @@ def main():
 
         elif choice == "3":
 
-            print("\nUpdate Student (Coming Soon)")
-            input("\nPress Enter to continue...")
+            update_student()
 
         elif choice == "4":
 

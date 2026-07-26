@@ -1,6 +1,6 @@
 """
 =========================================================
-Eagle_Vision_AI v2.1
+Eagle Vision AI
 Module : Face Database
 Author : Sourav Kumar Azad
 =========================================================
@@ -47,14 +47,10 @@ os.makedirs(
 
 def load_database():
 
-    if not os.path.exists(
-        EMBEDDING_FILE
-    ):
+    if not os.path.exists(EMBEDDING_FILE):
         return {}
 
-    if os.path.getsize(
-        EMBEDDING_FILE
-    ) == 0:
+    if os.path.getsize(EMBEDDING_FILE) == 0:
         return {}
 
     try:
@@ -89,7 +85,7 @@ def save_database(database):
         )
 
 # =========================================================
-# Add Student Embedding
+# Add Student
 # =========================================================
 
 def add_student(
@@ -116,7 +112,7 @@ def add_student(
     )
 
 # =========================================================
-# Replace Student Embeddings
+# Replace Face Embeddings
 # =========================================================
 
 def update_student(
@@ -126,11 +122,43 @@ def update_student(
 
     database = load_database()
 
+    if student_name not in database:
+        return False
+
     database[student_name] = embeddings
 
     save_database(
         database
     )
+
+    return True
+
+# =========================================================
+# Rename Student
+# =========================================================
+
+def rename_student(
+    old_name,
+    new_name
+):
+
+    database = load_database()
+
+    if old_name not in database:
+        return False
+
+    if new_name in database:
+        return False
+
+    database[new_name] = database.pop(
+        old_name
+    )
+
+    save_database(
+        database
+    )
+
+    return True
 
 # =========================================================
 # Delete Student
@@ -142,17 +170,16 @@ def delete_student(
 
     database = load_database()
 
-    if student_name in database:
+    if student_name not in database:
+        return False
 
-        del database[student_name]
+    del database[student_name]
 
-        save_database(
-            database
-        )
+    save_database(
+        database
+    )
 
-        return True
-
-    return False
+    return True
 
 # =========================================================
 # Get Student Embeddings
@@ -165,11 +192,12 @@ def get_embedding(
     database = load_database()
 
     return database.get(
-        student_name
+        student_name,
+        None
     )
 
 # =========================================================
-# Get Complete Database
+# Get All Students
 # =========================================================
 
 def get_all_students():
@@ -177,7 +205,19 @@ def get_all_students():
     return load_database()
 
 # =========================================================
-# Student Count
+# Student Exists
+# =========================================================
+
+def student_exists(
+    student_name
+):
+
+    database = load_database()
+
+    return student_name in database
+
+# =========================================================
+# Total Students
 # =========================================================
 
 def total_students():
@@ -207,18 +247,6 @@ def total_embeddings():
     return total
 
 # =========================================================
-# Check Student Exists
-# =========================================================
-
-def student_exists(
-    student_name
-):
-
-    database = load_database()
-
-    return student_name in database
-
-# =========================================================
 # Clear Database
 # =========================================================
 
@@ -232,11 +260,12 @@ def clear_database():
 
 if __name__ == "__main__":
 
-    database = load_database()
+    print("=" * 60)
+    print("           Eagle Vision AI")
+    print("            Face Database")
+    print("=" * 60)
 
-    print("=" * 60)
-    print("Eagle_Vision_AI Face Database")
-    print("=" * 60)
+    database = load_database()
 
     print(
         f"Registered Students : {total_students()}"
